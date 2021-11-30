@@ -41,7 +41,7 @@ void menuLogin(int *pilihan);
 void menuUtama(int *pilihan);
 void exit(int status);
 void *generateTicket(int st_awal, int st_akhir, char *kodeTiket);
-void beliTiket(); void lihatRiwayat(); void ruteMRT();
+void beliTiket(); void lihatRiwayat(); void ruteMRT(); void kembaliKeMenuUtama();
 
 int main() {
     system("clear"); // Menghapus Screen
@@ -240,20 +240,11 @@ void beliTiket() {
     printf("Anda memilih stasiun %s sebagai stasiun awal dan stasiun %s sebagai stasiun akhir\n", stasiun_mrt[tiket.st_awal], stasiun_mrt[tiket.st_akhir]);
     generateTiket(tiket.st_awal, tiket.st_akhir, tiket.kode_tiket);
 
-    char yesNo[1];
-    do {
-        printf("Apakah anda ingin kembali ke menu utama?(Y) ");
-        scanf("%s", &yesNo[0]);
-        if(yesNo[0] == 'Y' || yesNo[0] == 'y') {
-            system("clear"); // Menghapus Screen Untuk Ke Menu Berikutnya
-            menuUtama(&pilihan);
-        } else {
-            printf("Error!\n");
-        }
-    } while (yesNo[0] != 'Y' && yesNo[0] != 'y');
+    kembaliKeMenuUtama();
 }
 
 void lihatRiwayat() {
+    system("clear"); // Menghapus screen
     char tmp_user[100], *sp;
 
     FILE *userdata;
@@ -280,14 +271,31 @@ void lihatRiwayat() {
     }
     fclose(userdata);
     userdata = 0;
+    kembaliKeMenuUtama();
 }
 
 void ruteMRT () {
-    printf("Rute MRT:\n");
+    system("clear"); // Menghapus screen
+    printf("Rute MRT:\n\n");
     for(int i = 1; i <= 13; i++) {
         printf("%s\n", stasiun_mrt[i]);
         if (i!=13) 
         printf("   | \n");
-        
     }
+
+    kembaliKeMenuUtama();
+}
+
+void kembaliKeMenuUtama() {
+    char yesNo[1];
+    do {
+        printf("Apakah anda ingin kembali ke menu utama?(Y) ");
+        scanf("%s", &yesNo[0]);
+        if(yesNo[0] == 'Y' || yesNo[0] == 'y') {
+            system("clear"); // Menghapus Screen Untuk Ke Menu Berikutnya
+            menuUtama(&pilihan);
+        } else {
+            printf("Error!\n");
+        }
+    } while (yesNo[0] != 'Y' && yesNo[0] != 'y');
 }
