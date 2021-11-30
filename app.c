@@ -30,6 +30,7 @@ char stasiun_mrt[][20] = {
     "Dukuh Atas",
     "Bundaran HI" 
 };
+
 char user_id[20];
 int loggedIn = 0;
 int pilihan;
@@ -40,7 +41,7 @@ void menuLogin(int *pilihan);
 void menuUtama(int *pilihan);
 void exit(int status);
 void *generateTicket(int st_awal, int st_akhir, char *kodeTiket);
-void beliTiket(); void lihatRiwayat();
+void beliTiket(); void lihatRiwayat(); void ruteMRT();
 
 int main() {
     system("clear"); // Menghapus Screen
@@ -162,7 +163,7 @@ void menuUtama(int *pilihan) {
             printf("Anda memilih menu Jadwal\n");
             break;
         case 4:
-            printf("Anda memilih menu Rute MRT\n");
+            ruteMRT();
             break;
         case 5:
             printf("Anda memilih untuk keluar\n");
@@ -279,4 +280,14 @@ void lihatRiwayat() {
     }
     fclose(userdata);
     userdata = 0;
+}
+
+void ruteMRT () {
+    printf("Rute MRT:\n");
+    for(int i = 1; i <= 13; i++) {
+        printf("%s\n", stasiun_mrt[i]);
+        if (i!=13) 
+        printf("   | \n");
+        
+    }
 }
