@@ -40,3 +40,12 @@ int main() {
     printf("\n%s\n", gate[pintu]);
     return 0;
 }
+
+void menuRegister()
+{
+    FILE *ticketdata;
+    ticketdata = fopen("./data/ticket_data.csv", "r");
+    if(ticketdata == NULL) {
+        printf("Error: Tidak dapat membuka file data user\n");
+        exit(1);
+}
