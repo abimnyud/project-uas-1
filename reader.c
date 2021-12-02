@@ -8,7 +8,7 @@ char stasiun_mrt[][20] = {
     "Haji Nawi",
     "Blok A",
     "Blok M",
-    "Sisingamangaraja",
+    "ASEAN",
     "Senayan",
     "Istora",
     "Benhil",
@@ -41,6 +41,10 @@ int main() {
     return 0;
 }
 
+char *tmp_ticket;
+char *ticket_id;
+char *sp;
+
 void menuRegister()
 {
     FILE *ticketdata;
@@ -48,4 +52,21 @@ void menuRegister()
     if(ticketdata == NULL) {
         printf("Error: Tidak dapat membuka file data user\n");
         exit(1);
+    }
+
+    int i = 1;
+    printf("Username\tStasiun Awal\tStasiun Tujuan\tKode_Tiket\n");
+    while(fgets(tmp_ticket, 100, ticketdata) != NULL) {
+        sp = strtok(tmp_ticket, ",");
+        if(strcmp(ticket_id, sp) == 0) {
+            printf("%-4d", i);
+            sp = strtok(NULL, ",");
+            printf("%-20s", sp);
+            sp = strtok(NULL, ",");
+            printf("%-20s", sp);
+            sp = strtok(NULL, ",");
+            printf("%s\n", sp);
+        i++;
+        }
+    }
 }

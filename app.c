@@ -22,7 +22,7 @@ char stasiun_mrt[][20] = {
     "Haji Nawi",
     "Blok A",
     "Blok M",
-    "Sisingamangaraja",
+    "ASEAN",
     "Senayan",
     "Istora",
     "Benhil",
@@ -34,14 +34,13 @@ char stasiun_mrt[][20] = {
 char user_id[20];
 int loggedIn = 0;
 int pilihan;
-typedef enum {Y, N} boolean;
 
 void login(int *loggedIn);
 void menuLogin(int *pilihan);
 void menuUtama(int *pilihan);
 void exit(int status);
 void *generateTicket(int st_awal, int st_akhir, char *kodeTiket);
-void beliTiket(); void lihatRiwayat(); void ruteMRT(); void kembaliKeMenuUtama();
+void beliTiket(); void lihatRiwayat(); void ruteMRT(); void kembaliKeMenuUtama(); void jadwal();
 
 int main() {
     system("clear || cls"); // Menghapus Screen
@@ -160,7 +159,7 @@ void menuUtama(int *pilihan) {
             lihatRiwayat();
             break;
         case 3:
-            printf("Anda memilih menu Jadwal\n");
+            jadwal();
             break;
         case 4:
             ruteMRT();
@@ -298,4 +297,24 @@ void kembaliKeMenuUtama() {
             printf("Error!\n");
         }
     } while (yesNo[0] != 'Y' && yesNo[0] != 'y');
+}
+
+void jadwal() {
+    system("clear || cls"); // Menghapus screen
+    printf("Anda memilih menu Jadwal MRT\n\n");
+    int a, id_jadwal[14] = {0, 20, 21, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39};
+    for (int i = 1; i <= 13; i++) {
+        printf("%d. %s\n", i, stasiun_mrt[i]);
+    }
+
+    do {
+        printf("\nMasukkan nomor stasiun keberangkatan: ");
+        scanf("%d", &a);
+        if (a < 1 || a > 13) printf("\nNomor stasiun tidak valid\n");
+    } while (a < 1 || a > 13);
+
+    printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[a]);
+    printf("Jadwal lengkap kedatangan kereta dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=%d\n\n", id_jadwal[a]);
+
+    kembaliKeMenuUtama();
 }
