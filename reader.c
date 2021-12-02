@@ -40,3 +40,33 @@ int main() {
     printf("\n%s\n", gate[pintu]);
     return 0;
 }
+
+char *tmp_ticket;
+char *ticket_id;
+char *sp;
+
+void menuRegister()
+{
+    FILE *ticketdata;
+    ticketdata = fopen("./data/ticket_data.csv", "r");
+    if(ticketdata == NULL) {
+        printf("Error: Tidak dapat membuka file data user\n");
+        exit(1);
+    }
+
+    int i = 1;
+    printf("Username\tStasiun Awal\tStasiun Tujuan\tKode_Tiket\n");
+    while(fgets(tmp_ticket, 100, ticketdata) != NULL) {
+        sp = strtok(tmp_ticket, ",");
+        if(strcmp(ticket_id, sp) == 0) {
+            printf("%-4d", i);
+            sp = strtok(NULL, ",");
+            printf("%-20s", sp);
+            sp = strtok(NULL, ",");
+            printf("%-20s", sp);
+            sp = strtok(NULL, ",");
+            printf("%s\n", sp);
+        i++;
+        }
+    }
+}
