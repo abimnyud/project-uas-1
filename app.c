@@ -390,7 +390,7 @@ void subMenu(char *pil)
     switch (opt)
     {
     case 1:
-        menuTicket();
+        beliTiket();
         break;
     case 2:
         lihatRiwayat();
