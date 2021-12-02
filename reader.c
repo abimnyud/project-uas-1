@@ -8,7 +8,7 @@ char stasiun_mrt[][20] = {
     "Haji Nawi",
     "Blok A",
     "Blok M",
-    "Sisingamangaraja",
+    "ASEAN",
     "Senayan",
     "Istora",
     "Benhil",
