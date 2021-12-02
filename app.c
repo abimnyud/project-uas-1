@@ -35,7 +35,7 @@ char user[30], user_id[20], pilihan[8], buffer[8];
 int loggedIn = 0, id, buffLen, i, opt;
 
 void mainGate(); void menuRegister(); void mainMenu(char *user); void optionLoginRegister(); void loginRegister(char *pil);
-void login(int *loggedIn); void subMenu(char *pil); void menuTicket();
+void login(int *loggedIn); void subMenu(char *pil);
 void jadwal(); void kembaliKeMenuUtama(); void ruteMRT(); void beliTiket(); void lihatRiwayat();
 void menuLogin(); void exit(int status);
 
@@ -416,11 +416,6 @@ void subMenu(char *pil)
         printf("+--------------------------------------------------------------+\n");
         mainMenu(user);
     }
-}
-
-void menuTicket()
-{
-    printf("Lagi kerja diganggu aswwww\n");
 }
 
 void login(int *loggedIn) {
