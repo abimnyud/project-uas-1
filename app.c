@@ -307,12 +307,6 @@ void jadwal() {
         printf("%d. %s\n", i, stasiun_mrt[i]);
     }
 
-    /* while (a == 1|2|3|4|5|6|7|8|9|10|11|12|13) {
-    printf("\nMasukkan nomor stasiun keberangkatan: ");
-    scanf("%d", &a);
-    break;
-    } */
-
     do {
         printf("\nMasukkan nomor stasiun keberangkatan: ");
         scanf("%d", &a);
@@ -323,58 +317,4 @@ void jadwal() {
     printf("Jadwal lengkap kedatangan kereta dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=%d\n\n", id_jadwal[a]);
 
     kembaliKeMenuUtama();
-    /* switch (a) {
-        case 1:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[1]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=20");
-            break;
-        case 2:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[2]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=21");
-            break;
-        case 3:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[3]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=29");
-            break;
-        case 4:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[4]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=30");
-            break;
-        case 5:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[5]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=31");
-            break;
-        case 6:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[6]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=32");
-            break;
-        case 7:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[7]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=33");
-            break;
-        case 8:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[8]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=34");
-            break;
-        case 9:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[9]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=35");
-            break;
-        case 10:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[10]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=36");
-            break;
-        case 11:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[11]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=37");
-            break;
-        case 12:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[12]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=38");
-            break;
-        case 13:
-            printf("\nAnda memilih stasiun %s sebagai stasiun keberangkatan\n", stasiun_mrt[13]);
-            printf("Jadwal lengkap MRT dapat dilihat di: https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=39");
-            break;
-    } */
 }
