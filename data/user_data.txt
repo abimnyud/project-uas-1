@@ -4,5 +4,11 @@
 		'name': 'Abimanyu Damarjati',
 		'username': 'abi',
 		'password': 'abi'
+	},
+	{
+		'id': 'U0013317',
+		'name': 'Muhamad Aziz Prasetyo',
+		'username': 'aziz',
+		'password': 'aziz'
 	}
 }
