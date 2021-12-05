@@ -13,7 +13,7 @@
 #define MAXB 1024
 #define MAXD 40
 #define MAXF 2048
-#define MAXI 16
+#define MAXI 12
 #define MAXM 512
 #define MAXT 20
 
@@ -54,7 +54,7 @@ int stations_len = sizeof(stations) / sizeof(stations[0]);
 int i, j;
 
 char user_id[MAXI] = "U0000000";
-char buff_id[MAXI];
+char buff_id[MAXI] = "";
 char name[MAXD], username[MAXD], password[MAXD], confirm_password[MAXD], u[MAXD] = "", p[MAXD] = "", user[MAXD] = "";
 char temp_data[MAXB] = "";
 char user_data[MAXF] = "";
@@ -259,11 +259,12 @@ void registerAttempt(FILE **rfptr, char *u, char *pass, char *conf) {
 
 void createUserData(FILE **wfptr, char *name, char *u, char *pass) {
     int token, n;
+    strcpy(user_id, "U0000000");
     srand(time(NULL));                   // inisialisasi nomor acak
     token = rand() % 9999999 + 1;           // id acak
     n = sprintf(buff_id, "%d", token); // konversi int ke string
 
-    for (i = MAXI - n, j = 0; i < MAXI; i++, j++)
+    for (i = 8 - n, j = 0; i < 8; i++, j++)
         user_id[i] = buff_id[j];
 
     if (strcmp(temp_data, "") == 0) {
@@ -275,6 +276,7 @@ void createUserData(FILE **wfptr, char *name, char *u, char *pass) {
         sprintf(temp_data, "%s},\n\t{\n\t\t'id': '%s',\n\t\t'name': '%s',\n\t\t'username': '%s',\n\t\t'password': '%s'\n\t}\n}", user_data, user_id, name, u, pass);
         fprintf(*wfptr, "%s", temp_data);
     }
+    strcpy(buff_id, ""); // reset buff_id
 
     strcpy(success, "|                           Selamat!                           |\n|                  Akun Anda berhasil dibuat.                  |\n|               Silakan login untuk melanjutkan.               |\n");
     successMessage(success);
@@ -309,8 +311,11 @@ void loginAttempt(FILE **rfptr, char *u, char *p) {
         tptr = strtok(temp_data, ",{}:\n\t");
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
-            if (i % 2 == 0 && (i - 2) % 6 == 0)
+            if (i % 2 == 0 && (i - 2) % 6 == 0) {
                 strcpy(user_id, tptr);
+                printf("%s", tptr);
+                printf("%s", user_id);
+            }
             if (i % 3 == 0)
                 strcpy(user, tptr);
             if (strcmp(u, tptr) == 0) {
