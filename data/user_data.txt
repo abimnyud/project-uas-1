@@ -8,7 +8,7 @@
 	{
 		'id': 'U0013317',
 		'name': 'Muhamad Aziz Prasetyo',
-		'username': 'aziz',
-		'password': 'aziz'
+		'username': 'a',
+		'password': 'a'
 	}
 }

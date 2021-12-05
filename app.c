@@ -28,12 +28,11 @@
 // I/O **
 
 char current_menu[MAXD];
-char menus[][20] = {
+char pages[][20] = {
     "Main Gate",
     "Main Menu",
     "Ticket Menu",
-    "Riwayat",
-    "Jadwal"
+    "Jadwal",
 };
 
 char stations[][20] = {
@@ -54,9 +53,9 @@ char stations[][20] = {
 int stations_len = sizeof(stations) / sizeof(stations[0]);
 int i, j;
 
-char user_id[] = "U0000000";
+char user_id[MAXI] = "U0000000";
 char buff_id[MAXI];
-char name[MAXD], username[MAXD], password[MAXD], confirm_password[MAXD], u[MAXD], p[MAXD], user[MAXD];
+char name[MAXD], username[MAXD], password[MAXD], confirm_password[MAXD], u[MAXD] = "", p[MAXD] = "", user[MAXD] = "";
 char temp_data[MAXB];
 char user_data[MAXF] = "";
 char ticket_data[MAXF] = "";
@@ -85,15 +84,17 @@ void history();
 void schedule();
 void routes();
 void backToMainMenu();
+void logout();
 void successMessage(char *suc);
 void errorMessage(char *err, char last);
 void fileError();
 void exitMessage();
 
-int main() {
+int main(void) {
     system("clear || cls"); // Menghapus Screen
     splashScreen();
     mainGate();
+    return 0;
 }
 
 void splashScreen() {
@@ -120,7 +121,6 @@ void splashScreen() {
 }
 
 void mainGate() {
-    strcpy(current_menu, menus[0]);
     printf("+========================[[ MAIN GATE ]]=======================+\n");
     printf("|                                                              |\n");
     printf("|    1. Login                                                  |\n");
@@ -131,33 +131,35 @@ void mainGate() {
     fgets(selection, sizeof selection, stdin);
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
-    validateSelection(selection, current_menu);
+    validateSelection(selection, pages[0]);
     exitMainGate(selection);
 }
 
 void validateSelection(char *slc, char *cur) {
     i = 1;
     size_t len = strlen(slc);
-    if (strcmp(cur, menus[0]) == 0)
+    if (strcmp(cur, pages[0]) == 0)
         last = '2';
-    if (strcmp(cur, menus[1]) == 0)
+    if (strcmp(cur, pages[1]) == 0)
         last = '4';
-    if (strcmp(cur, menus[2]) == 0) {
+    if (strcmp(cur, pages[2]) == 0) {
         len--;
         last = '8';
     }
-    if (*cur == 'y') {
-        last = 'y';
-        if (*slc != 'Y' && *slc != 'y')
-            strcpy(error, "|             Input yang Anda masukan tidak sesuai!            |\n|                     Silakan coba kembali.                    |\n");
-    }
-
-    if (strcmp(cur, menus[4]) == 0) {
+    if (strcmp(cur, pages[3]) == 0) {
         len--;
         last = '9';
     }
+    if (*cur == 'y')
+        last = 'y';
+    if (*cur == 'Y')
+        last = 'Y';
 
-    if (strcmp(cur, menus[2]) == 0 || strcmp(cur, menus[4]) == 0) {
+    if (last == 'y' || last == 'Y')
+        if (*slc != 'y' && *slc != 'Y')
+            strcpy(error, "|             Input yang Anda masukan tidak sesuai!            |\n|                     Silakan coba kembali.                    |\n");
+
+    if (strcmp(cur, pages[2]) == 0 || strcmp(cur, pages[3]) == 0) {
         if (*slc == '\n' || *slc == '0') {
             printf("|                                                              |\n");
             printf("+==============================================================+\n\n");
@@ -300,16 +302,20 @@ void loginMenu() {
 
 void loginAttempt(FILE **rfptr, char *u, char *p) {
     int key = 0;
-    i = 0;
+    i = j = 0;
     while (fgets(temp_data, sizeof temp_data, *rfptr) != NULL) {
         tptr = strtok(temp_data, ",{}:\n\t");
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
+            if (i % 2 == 0 && (i - 2) % 6 == 0)
+                strcpy(user_id, tptr);
             if (i % 3 == 0)
                 strcpy(user, tptr);
-            if ((i + 1) % 3 == 0)
-                strcpy(user_id, tptr);
-            if (strcmp(u, tptr) == 0 && strcmp(p, tptr) == 0)
+            if (strcmp(u, tptr) == 0) {
+                j = i + 1;
+                *u = NULL;
+            }
+            if (i == j && strcmp(p, tptr) == 0)
                 key = 1;
         }
         i++;
@@ -332,7 +338,6 @@ void loginAttempt(FILE **rfptr, char *u, char *p) {
 }
 
 void mainMenu(char *user) {
-    strcpy(current_menu, menus[1]);
     printf("+==============================================================+\n");
     printf("|                                                              |\n");
     printf("|                           MAIN MENU                          |\n");
@@ -345,13 +350,13 @@ void mainMenu(char *user) {
     printf("|    2. Lihat Riwayat                                          |\n");
     printf("|    3. Jadwal                                                 |\n");
     printf("|    4. Rute MRT                                               |\n");
-    printf("|    0. Keluar                                                 |\n");
+    printf("|    0. Logout                                                 |\n");
     printf("|                                                              |\n");
     printf("+--- Pilih Menu : ");
     fgets(selection, sizeof selection, stdin);
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
-    validateSelection(selection, current_menu);
+    validateSelection(selection, pages[1]);
     subMenu(selection);
 }
 
@@ -360,18 +365,14 @@ void subMenu(char *slc) {
     {
     case '1':
         ticketMenu();
-        // beliTiket();
-        // break;
     case '2':
         history();
     case '3':
         schedule();
-    //     break;
     case '4':
         routes();
-    //     break;
     default:
-        exitMessage();
+        logout();
     }
 }
 
@@ -383,7 +384,6 @@ void ticketMenu() {
     } ticket;
     int s, d;
 
-    strcpy(current_menu, menus[2]);
     printf("+=======================[[ BELI TIKET ]]=======================+\n");
     printf("|                                                              |\n");
     printf("|                      Daftar Stasiun MRT                      |\n");
@@ -398,11 +398,11 @@ void ticketMenu() {
     printf("|                                                              |\n");
     printf("+--- Pilih Stasiun Awal   : ");
     fgets(ticket.start, sizeof ticket.start, stdin);
-    validateSelection(&(ticket.start), current_menu);
+    validateSelection(&(ticket.start), pages[2]);
     printf("|                                                              |\n");
     printf("+--- Pilih Stasiun Tujuan : ");
     fgets(ticket.destination, sizeof ticket.destination, stdin);
-    validateSelection(&(ticket.destination), current_menu);
+    validateSelection(&(ticket.destination), pages[2]);
     printf("|                                                              |\n");
     ticket.start[strlen(ticket.start) - 1] = ticket.destination[strlen(ticket.destination) - 1] = 0;
 
@@ -478,34 +478,34 @@ void history() {
 
     int n = 0;
     i = j = 0;
-    
-    strcpy(current_menu, menus[3]);
     printf("+=========================[[ RIWAYAT ]]========================+\n");
     printf("|                                                              |\n");
     while(fgets(temp_data, sizeof temp_data, rfptr) != NULL) {
         tptr = strtok(temp_data, ",{}:\n\t");
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
-
             if (strcmp(user_id, tptr) == 0) {
                 n++;
-                j = i + 1;
+                j = i;
                 printf("|    Nomor          : %-41d|\n", n);
             }
-            if (i == j)
-                printf("|    Stasiun Awal   :%-42s|\n", tptr);
-            if (i == j + 1)
-                printf("|    Stasiun Tujuan :%-42s|\n", tptr);
-            if (i == j + 2)
-                printf("|    Kode Tiket     :%-42s|\n", tptr);
-        }
+            if (j > 0) {
+                if (i == j + 1)
+                    printf("|    Stasiun Awal   :%-42s|\n", tptr);
+                if (i == j + 2)
+                    printf("|    Stasiun Tujuan :%-42s|\n", tptr);
+                if (i == j + 3) {
+                    printf("|    Kode Tiket     :%-42s|\n", tptr);
+
+                        printf("|                                                              |\n");
+                        printf("+--------------------------------------------------------------+\n");
+                        printf("|                                                              |\n");
+                }
+            } 
+        }        
         i++;
-        if (i % 6 == 0 && (i == j + 3 && i - n > j)) {
-            printf("|                                                              |\n");
-            printf("+--------------------------------------------------------------+\n");
-            printf("|                                                              |\n");
-        }
     }
+    printf("|    Total Tiket : %-44d|\n", n);
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
     fclose(rfptr);
@@ -516,7 +516,6 @@ void schedule() {
     // system("clear || cls"); // Menghapus screen /* menurut eug kerenan gausah di-clear */
     int schedule_id[] = {20, 21, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39};
     int s;
-    strcpy(current_menu, menus[4]);
     printf("+=========================[[ JADWAL ]]=========================+\n");
     printf("|                                                              |\n");
     printf("|                      Daftar Stasiun MRT                      |\n");
@@ -531,7 +530,7 @@ void schedule() {
     printf("|                                                              |\n");
     printf("+--- Pilih Stasiun Keberangkatan : ");
     fgets(selection, sizeof selection, stdin);
-    validateSelection(selection, current_menu);
+    validateSelection(selection, pages[3]);
 
     s = atoi(selection) - 1;
     printf("|                                                              |\n");
@@ -574,6 +573,21 @@ void backToMainMenu() {
     mainMenu(user);
 }
 
+void logout() {
+    printf("+=========================[[ LOGOUT ]]=========================+\n");
+    printf("|                                                              |\n");
+    printf("+--- Apakah yakin ingin keluar akun? (Y/N) : ");
+    fgets(selection, sizeof selection, stdin);
+    printf("|                                                              |\n");
+    printf("+==============================================================+\n\n");
+    if (*selection == 'N')
+        mainMenu(user);
+    validateSelection(selection, "Y");
+    strcpy(success, "|                       Logout berhasil!                       |\n");
+    successMessage(success);
+    mainGate();
+}
+
 void successMessage(char *suc) {
     printf("+==( PESAN SUKSES )============================================+\n");
     printf("|                                                              |\n");
@@ -601,6 +615,8 @@ void errorMessage(char *err, char last) {
         schedule();
     if (last == 'y')
         backToMainMenu();
+    if (last == 'Y')
+        logout();
 }
 
 void fileError() {
