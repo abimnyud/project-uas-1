@@ -13,8 +13,8 @@
 #define MAXB 1024
 #define MAXD 40
 #define MAXF 2048
-#define MAXI 8
-#define MAXM 256
+#define MAXI 16
+#define MAXM 512
 #define MAXT 20
 
 // Pernyataan Kondisi (Wajib) **
@@ -56,7 +56,7 @@ int i, j;
 char user_id[MAXI] = "U0000000";
 char buff_id[MAXI];
 char name[MAXD], username[MAXD], password[MAXD], confirm_password[MAXD], u[MAXD] = "", p[MAXD] = "", user[MAXD] = "";
-char temp_data[MAXB];
+char temp_data[MAXB] = "";
 char user_data[MAXF] = "";
 char ticket_data[MAXF] = "";
 char *tptr;
@@ -188,8 +188,10 @@ void exitMainGate(char *slc) {
     switch (*slc)
     {
     case '1':
+        system("clear || cls"); // Menghapus screen
         loginMenu();
     case '2':
+        system("clear || cls"); // Menghapus screen
         registerMenu();
     default:
         exitMessage();
@@ -364,12 +366,16 @@ void subMenu(char *slc) {
     switch (*slc)
     {
     case '1':
+        system("clear || cls"); // Menghapus screen
         ticketMenu();
     case '2':
+        system("clear || cls"); // Menghapus screen
         history();
     case '3':
+        system("clear || cls"); // Menghapus screen
         schedule();
     case '4':
+        system("clear || cls"); // Menghapus screen
         routes();
     default:
         logout();
@@ -513,7 +519,6 @@ void history() {
 }
 
 void schedule() {
-    // system("clear || cls"); // Menghapus screen /* menurut eug kerenan gausah di-clear */
     int schedule_id[] = {20, 21, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39};
     int s;
     printf("+=========================[[ JADWAL ]]=========================+\n");
@@ -538,12 +543,14 @@ void schedule() {
     printf("|                                                              |\n");
     printf("|    Stasiun %-16s (keberangkatan) -----------------+\n", stations[s]);
     printf("|                                                              |\n");
-    printf("|    Jadwal lengkap keberangkatan dapat dilihat di :           |\n");
-    printf("|                                                              |\n");
-    printf("|    https://jakartamrt.co.id/id/                              |\n");
-    printf("|          jadwal-keberangkatan-mrt?dari=%-2d                    |\n", schedule_id[s]);
-    printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
+    printf("+==( LINK )==========================================================+\n");
+    printf("|                                                                    |\n");
+    printf("|    Jadwal lengkap keberangkatan dapat dilihat di :                 |\n");
+    printf("|                                                                    |\n");
+    printf("|    https://jakartamrt.co.id/id/jadwal-keberangkatan-mrt?dari=%-6d|\n", schedule_id[s]);
+    printf("|                                                                    |\n");
+    printf("+====================================================================+\n\n");
     backToMainMenu();
 }
 
@@ -570,6 +577,7 @@ void backToMainMenu() {
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
     validateSelection(selection, "y");
+    system("clear || cls"); // Menghapus screen
     mainMenu(user);
 }
 
@@ -589,6 +597,7 @@ void logout() {
 }
 
 void successMessage(char *suc) {
+    system("clear || cls"); // Menghapus screen
     printf("+==( PESAN SUKSES )============================================+\n");
     printf("|                                                              |\n");
     printf("%s", suc);
@@ -599,6 +608,7 @@ void successMessage(char *suc) {
 }
 
 void errorMessage(char *err, char last) {
+    system("clear || cls"); // Menghapus screen
     printf("+==( PESAN ERROR )=============================================+\n");
     printf("|                                                              |\n");
     printf("%s", err);
@@ -620,6 +630,7 @@ void errorMessage(char *err, char last) {
 }
 
 void fileError() {
+    system("clear || cls"); // Menghapus screen
     printf("+==( PESAN ERROR )=============================================+\n");
     printf("|                                                              |\n");
     printf("|                        404 Not Found!                        |\n");
