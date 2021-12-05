@@ -311,11 +311,8 @@ void loginAttempt(FILE **rfptr, char *u, char *p) {
         tptr = strtok(temp_data, ",{}:\n\t");
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
-            if (i % 2 == 0 && (i - 2) % 6 == 0) {
+            if (i % 2 == 0 && (i - 2) % 6 == 0)
                 strcpy(user_id, tptr);
-                printf("%s", tptr);
-                printf("%s", user_id);
-            }
             if (i % 3 == 0)
                 strcpy(user, tptr);
             if (strcmp(u, tptr) == 0) {
