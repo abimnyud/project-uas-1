@@ -390,7 +390,7 @@ void ticketMenu() {
         char destination[MAXD];
         char ticket_code[MAXT];
     } ticket;
-    int s, d;
+    int s, d, price;
 
     printf("+=======================[[ BELI TIKET ]]=======================+\n");
     printf("|                                                              |\n");
@@ -421,17 +421,62 @@ void ticketMenu() {
     }
     s = atoi(ticket.start) - 1;
     d = atoi(ticket.destination) - 1;
-    printf("+--------------------------------------------------------------+\n");
-    printf("|                                                              |\n");
-    printf("|    Stasiun yang dipilih, yaitu :                             |\n");
-    printf("|                                                              |\n");
-    printf("|    1. Stasiun %-16s (awal) -----------------------+\n", stations[s]);
-    printf("|    2. Stasiun %-16s (tujuan) ---------------------+\n", stations[d]);
-    printf("|                                                              |\n");
-    printf("+==============================================================+\n\n");
-    generateTicket(&(ticket.ticket_code));
-    createTicketData(stations[s], stations[d], &(ticket.ticket_code));
-    backToMainMenu();
+    if ( s > d) {
+        price = ((s - d) * 1000) + 3000;
+    } else {
+        price = ((d - s) * 1000) + 3000;
+    }
+
+    i = 0;
+    do {
+        printf("+--------------------------------------------------------------+\n");
+        printf("|                                                              |\n");
+        printf("|    Stasiun yang dipilih, yaitu :                             |\n");
+        printf("|                                                              |\n");
+        printf("|    1. Stasiun %-16s (awal) -----------------------+\n", stations[s]);
+        printf("|    2. Stasiun %-16s (tujuan) ---------------------+\n", stations[d]);
+        printf("|    3. Total Pembayaran : Rp %-2d ----------------------------+\n", price );
+        printf("|                                                              |\n");
+        printf("|             Silahkan Lakukan Pembayaran Melalui              |\n");
+        printf("|               Metode Pembayaran Kesukaan Anda                |\n");
+        printf("+==============================================================+\n\n");
+
+        printf("+==( LOADING )=================================================+\n");
+        printf("|                                                              |\n");
+        printf("|                  Menunggu Pembayaran Anda...                 |\n");
+        printf("|                                                              |\n");
+        printf("+==============================================================+\n\n");
+        sleep(3);
+
+        printf("+==( CONFIRM PAYMENT )=========================================+\n");
+        printf("|                                                              |\n");
+        printf("|                  Apakah Anda Sudah Membayar?                 |\n");
+        printf("|                                                              |\n");
+        printf("+--- (Y/N) : ");
+        fgets(selection, sizeof selection, stdin);
+        printf("+==============================================================+\n\n");
+        
+        if (*selection == 'Y' || *selection == 'y') {
+            generateTicket(&(ticket.ticket_code));
+            createTicketData(stations[s], stations[d], &(ticket.ticket_code));
+            backToMainMenu();
+        } else {
+            system("clear || cls"); // Menghapus screen
+            printf("+==( WARNING )=================================================+\n");
+            printf("|                                                              |\n");
+            printf("|         Silakan lakukan pembayaran terlebih dahulu!          |\n");
+            printf("|                                                              |\n");
+            printf("+==============================================================+\n\n");
+            i++;
+            if (i == 3) {
+                last = '4';
+                printf("+==============================================================+\n\n");
+                strcpy(error, "|      Anda gagal melakukan pembayaran sebanyak 3 kali.        |\n|      Silakan coba lagi nanti.                                |\n");
+                errorMessage(error, last);
+                break;
+            }
+        }
+    } while (*selection != 'Y' && *selection !='y');
 }
 
 void generateTicket(char *code) {
@@ -443,10 +488,10 @@ void generateTicket(char *code) {
 
     printf("+==( LOADING )=================================================+\n");
     printf("|                                                              |\n");
-    printf("|              Sedang membuat tiket untuk Anda...              |\n");
+    printf("|                 Sedang membuat tiket Anda...                 |\n");
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
-    sleep(10); // ceritanya nunggu 20 detik sampe tiket berhasil dibuat
+    sleep(5); // ceritanya nunggu 10 detik sampe tiket berhasil dibuat
 }
 
 void createTicketData(char *str, char *des, char *code) {
@@ -590,8 +635,10 @@ void logout() {
     fgets(selection, sizeof selection, stdin);
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
-    if (*selection == 'N')
+    if (*selection == 'N') {
+        system("clear || cls"); // Menghapus screen
         mainMenu(user);
+    }
     validateSelection(selection, "Y");
     strcpy(success, "|                       Logout berhasil!                       |\n");
     successMessage(success);
