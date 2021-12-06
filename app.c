@@ -199,7 +199,6 @@ void exitMainGate(char *slc) {
 }
 
 void registerMenu() {
-    // system("clear || cls"); // Menghapus Screen /* Menurut gue lebih keren gausah di-clear */
     FILE *rfptr;
     rfptr = fopen("./data/user_data.txt", "r");
     if (rfptr == NULL)
@@ -602,7 +601,6 @@ void schedule() {
 }
 
 void routes() {
-    // system("clear || cls"); // Menghapus screen /* menurut eug lebih keren ga di-clear */
     printf("+========================[[ RUTE MRT ]]========================+\n");
     printf("|                                                              |\n");
     for (i = 0; i < stations_len; i++) {
