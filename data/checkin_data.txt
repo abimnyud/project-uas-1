@@ -1,0 +1,17 @@
+{
+	{
+		'start_code': '0',
+		'destination_code': '12',
+		'ticket_code': 'KhlLxC944UBll1PUJduX'
+	},
+	{
+		'start_code': '3',
+		'destination_code': '4',
+		'ticket_code': 'XJ9F1IUrYCr6UfYZpftn'
+	}, 
+	{
+		'start_code': '6',
+		'destination_code': '2',
+		'ticket_code': 'EasHCyP2dEcfybnJ2PTT'
+	}
+}

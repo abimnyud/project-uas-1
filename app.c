@@ -317,7 +317,7 @@ void loginAttempt(FILE **rfptr, char *u, char *p) {
                 strcpy(user, tptr);
             if (strcmp(u, tptr) == 0) {
                 j = i + 1;
-                *u = NULL;
+                *u = 0;
             }
             if (i == j && strcmp(p, tptr) == 0)
                 key = 1;
@@ -652,8 +652,8 @@ void successMessage(char *suc) {
     printf("%s", suc);
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
-    *suc = NULL;
-    *temp_data = NULL;
+    *suc = 0;
+    *temp_data = 0;
 }
 
 void errorMessage(char *err, char last) {
@@ -663,7 +663,7 @@ void errorMessage(char *err, char last) {
     printf("%s", err);
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
-    *err = NULL;
+    *err = 0;
     if (last == '2')
         mainGate();
     if (last == '4')
