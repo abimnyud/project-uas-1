@@ -1,7 +1,1 @@
-{
-	{
-		'start_code': '2',
-		'destination_code': '9',
-		'ticket_code': 'EjNm5lpbl6p6Lc51Wlag'
-	}
-}
+
