@@ -1,26 +1,9 @@
 {
 	{
 		'user_id': 'U0013317',
-		'start': 'Lebak Bulus',
-		'destination': 'Bundaran HI',
-		'ticket_code': 'KhlLxC944UBll1PUJduX'
-	},
-	{
-		'user_id': 'U0013317',
-		'start': 'Haji Nawi',
-		'destination': 'Blok A',
-		'ticket_code': 'XJ9F1IUrYCr6UfYZpftn'
-	},
-	{
-		'user_id': 'U0580075',
-		'start': 'ASEAN',
-		'destination': 'Cipete Raya',
-		'ticket_code': 'EasHCyP2dEcfybnJ2PTT'
-	},
-	{
-		'user_id': 'U0013317',
-		'start': 'Cipete Raya',
-		'destination': 'Benhil',
-		'ticket_code': 'EjNm5lpbl6p6Lc51Wlag'
+		'start': 'Blok M',
+		'destination': 'Lebak Bulus',
+		'ticket_code': 'OrX4pj4oPqs2SHf6igDp',
+		'status': 'true'
 	}
 }

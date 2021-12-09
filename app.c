@@ -434,25 +434,26 @@ void ticketMenu() {
         printf("|                                                              |\n");
         printf("|    1. Stasiun %-16s (awal) -----------------------+\n", stations[s]);
         printf("|    2. Stasiun %-16s (tujuan) ---------------------+\n", stations[d]);
-        printf("|    3. Total Pembayaran : Rp %-2d ----------------------------+\n", price );
+        printf("|    3. Total Pembayaran : Rp%-2d -----------------------------+\n", price );
         printf("|                                                              |\n");
-        printf("|             Silahkan Lakukan Pembayaran Melalui              |\n");
-        printf("|               Metode Pembayaran Kesukaan Anda                |\n");
+        printf("|        Silakan untuk melakukan pembayaran menggunakan        |\n");
+        printf("|               metode pembayaran kesukaan Anda.               |\n");
+        printf("|                                                              |\n");
         printf("+==============================================================+\n\n");
 
         printf("+==( LOADING )=================================================+\n");
         printf("|                                                              |\n");
-        printf("|                  Menunggu Pembayaran Anda...                 |\n");
+        printf("|                  Menunggu pembayaran Anda...                 |\n");
         printf("|                                                              |\n");
         printf("+==============================================================+\n\n");
-        sleep(3);
-
+        sleep(5);
         printf("+==( CONFIRM PAYMENT )=========================================+\n");
         printf("|                                                              |\n");
-        printf("|                  Apakah Anda Sudah Membayar?                 |\n");
+        printf("|                  Apakah Anda sudah membayar?                 |\n");
         printf("|                                                              |\n");
         printf("+--- (Y/N) : ");
         fgets(selection, sizeof selection, stdin);
+        printf("|                                                              |\n");
         printf("+==============================================================+\n\n");
         
         if (*selection == 'Y' || *selection == 'y') {
@@ -463,14 +464,13 @@ void ticketMenu() {
             system("clear || cls"); // Menghapus screen
             printf("+==( WARNING )=================================================+\n");
             printf("|                                                              |\n");
-            printf("|         Silakan lakukan pembayaran terlebih dahulu!          |\n");
+            printf("|          Silakan lakukan pembayaran terlebih dahulu!         |\n");
             printf("|                                                              |\n");
             printf("+==============================================================+\n\n");
             i++;
             if (i == 3) {
                 last = '4';
-                printf("+==============================================================+\n\n");
-                strcpy(error, "|      Anda gagal melakukan pembayaran sebanyak 3 kali.        |\n|      Silakan coba lagi nanti.                                |\n");
+                strcpy(error, "|       Anda gagal melakukan pembayaran sebanyak 3 kali!       |\n|              Silakan coba kembali di lain waktu.             |\n");
                 errorMessage(error, last);
                 break;
             }
@@ -480,17 +480,19 @@ void ticketMenu() {
 
 void generateTicket(char *code) {
     char word_char[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+    size_t word_char_len = strlen(word_char);
 
     srand(time(NULL));
     for(i = 0; i < MAXT; i++)
-        code[i] = word_char[rand() % (strlen(word_char) - 1)];
+        code[i] = word_char[rand() % (word_char_len - 1)];
+    code[strlen(code) - 1] = 0;
 
     printf("+==( LOADING )=================================================+\n");
     printf("|                                                              |\n");
     printf("|                 Sedang membuat tiket Anda...                 |\n");
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
-    sleep(5); // ceritanya nunggu 10 detik sampe tiket berhasil dibuat
+    sleep(10); // ceritanya nunggu 10 detik sampe tiket berhasil dibuat
 }
 
 void createTicketData(char *str, char *des, char *code) {
@@ -509,11 +511,11 @@ void createTicketData(char *str, char *des, char *code) {
         fileError();
 
     if (strcmp(temp_data, "") == 0) {
-        sprintf(ticket_data, "{\n\t{\n\t\t'user_id':%s,\n\t\t'start': '%s',\n\t\t'destination': '%s',\n\t\t'ticket_code': '%s'\n\t}\n}", user_id, str, des, code);
+        sprintf(ticket_data, "{\n\t{\n\t\t'user_id':%s,\n\t\t'start': '%s',\n\t\t'destination': '%s',\n\t\t'ticket_code': '%s',\n\t\t'status': 'false'\n\t}\n}", user_id, str, des, code);
         fprintf(wfptr, "%s", ticket_data);
     } else {
         ticket_data[strlen(ticket_data) - 1] = ticket_data[strlen(ticket_data) - 2] = 0;
-        sprintf(temp_data, "%s},\n\t{\n\t\t'user_id':%s,\n\t\t'start': '%s',\n\t\t'destination': '%s',\n\t\t'ticket_code': '%s'\n\t}\n}", ticket_data, user_id, str, des, code);
+        sprintf(temp_data, "%s},\n\t{\n\t\t'user_id':%s,\n\t\t'start': '%s',\n\t\t'destination': '%s',\n\t\t'ticket_code': '%s',\n\t\t'status': 'false'\n\t}\n}", ticket_data, user_id, str, des, code);
         fprintf(wfptr, "%s", temp_data);
     }
     fclose(wfptr);
@@ -546,8 +548,10 @@ void history() {
                     printf("|    Stasiun Awal   :%-42s|\n", tptr);
                 if (i == j + 2)
                     printf("|    Stasiun Tujuan :%-42s|\n", tptr);
-                if (i == j + 3) {
+                if (i == j + 3)
                     printf("|    Kode Tiket     :%-42s|\n", tptr);
+                if (i == j + 4) {
+                    printf("|    Status         :%-42s|\n", tptr);
 
                         printf("|                                                              |\n");
                         printf("+--------------------------------------------------------------+\n");
