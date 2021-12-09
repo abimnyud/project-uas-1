@@ -15,7 +15,7 @@
 #define MAXF 2048
 #define MAXI 12
 #define MAXM 512
-#define MAXT 20
+#define MAXT 21
 
 // Pernyataan Kondisi (Wajib) **
 // Pernyataan Looping (Wajib) **
@@ -434,13 +434,12 @@ void ticketMenu() {
         printf("|                                                              |\n");
         printf("|    1. Stasiun %-16s (awal) -----------------------+\n", stations[s]);
         printf("|    2. Stasiun %-16s (tujuan) ---------------------+\n", stations[d]);
-        printf("|    3. Total Pembayaran : Rp%-2d -----------------------------+\n", price );
+        printf("|    3. Total Pembayaran : Rp%-5d ----------------------------+\n", price );
         printf("|                                                              |\n");
         printf("|        Silakan untuk melakukan pembayaran menggunakan        |\n");
         printf("|               metode pembayaran kesukaan Anda.               |\n");
         printf("|                                                              |\n");
         printf("+==============================================================+\n\n");
-
         printf("+==( LOADING )=================================================+\n");
         printf("|                                                              |\n");
         printf("|                  Menunggu pembayaran Anda...                 |\n");
@@ -485,8 +484,7 @@ void generateTicket(char *code) {
     srand(time(NULL));
     for(i = 0; i < MAXT; i++)
         code[i] = word_char[rand() % (word_char_len - 1)];
-    code[strlen(code) - 1] = 0;
-
+    code[20] = 0;
     printf("+==( LOADING )=================================================+\n");
     printf("|                                                              |\n");
     printf("|                 Sedang membuat tiket Anda...                 |\n");
