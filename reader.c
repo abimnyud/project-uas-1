@@ -371,8 +371,10 @@ void errorMessage(char *err, char *page) {
         selectReader();
     if (strcmp(page, pages[1]) == 0) // error saat pilihan gates tidak sesuai
         selectGate();
-    if (page[0] == '0') // error saat kode tiket tidak sesuai
+    if (page[0] == '0') { // error saat kode tiket tidak sesuai
+        sleep(3); // nunggu 3 detik sebelum terminal tutup
         exit(0);
+    }
 }
 
 void fileError() {
@@ -383,5 +385,6 @@ void fileError() {
     printf("|        Tidak ada berkas atau direktori yang dimaksud.        |\n");
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
+    sleep(3); // nunggu 3 detik sebelum terminal tutup
     exit(0);
 }
