@@ -727,5 +727,6 @@ void exitMessage() {
     printf("|            Terima kasih dan sampai jumpa kembali!            |\n");
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
+    sleep(3); // nunggu 3 detik biar pesannya kebaca sebelum terminal tutup
     exit(0);
 }
