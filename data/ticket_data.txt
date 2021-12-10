@@ -1,9 +1,0 @@
-{
-	{
-		'user_id': 'U0013317',
-		'start': 'Blok M',
-		'destination': 'Lebak Bulus',
-		'ticket_code': 'OrX4pj4oPqs2SHf6igDp',
-		'status': 'true'
-	}
-}

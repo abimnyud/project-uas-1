@@ -39,21 +39,21 @@ int gates_len = sizeof(gates) / sizeof(gates[0]);
 
 char pages[][20] = {
     "Mesin Reader",
-    "Pintu Stasiun"
+    "Pintu Stasiun",
 };
 
-char last; char *tptr; char temp_data[MAXB] = ""; char ticket_data[MAXF] = "";
-char ticket[MAXD] = ""; char error[MAXM] = ""; char success[MAXM] = ""; char selection[MAXB];
+char last; char *tptr; char temp_data[MAXF]; char ticket_data[MAXF] = "";
+char ticket[MAXA]; char error[MAXM]; char success[MAXM]; char selection[MAXB];
 int reader, destination, gate, i, j;
 
-void inputTicket(); void validateCheckIn(char *tic, size_t len); void createCheckInData(char *tic);
-void validateCheckOut(char *tic, size_t len); void createCheckOutData(char *tic);
+void inputTicket(); void validateCheckIn(char *tic, int len); void createCheckInData(char *tic);
+void validateCheckOut(char *tic, int len); void createCheckOutData(char *tic);
 void updateTicketData(char *src, char *sub, char *str);
 void validateSelection(char *slc, char *page); void selectReader(); void selectGate();
-void successMessage(char *suc); void errorMessage(char *err, char last); void fileError();
+void successMessage(char *suc); void errorMessage(char *err, char *page); void fileError();
 
 int main() {
-    system("clear || cls"); // Menghapus screen
+    system("cls || clear"); // Menghapus screen
     selectReader();
     selectGate();
     inputTicket();
@@ -102,7 +102,7 @@ void selectGate() {
 
 void inputTicket() {
     char ticket_code[MAXD];
-    size_t ticket_len;
+    int ticket_len;
     printf("+=======================[[ INPUT TIKET ]]======================+\n");
     printf("|                                                              |\n");
     printf("+--- Silakan masukan kode tiket Anda : ");
@@ -118,7 +118,7 @@ void inputTicket() {
         printf("|              Sedang mengonfirmasi tiket Anda...              |\n");
         printf("|                                                              |\n");
         printf("+==============================================================+\n\n");
-        sleep(10); // ceritanya nunggu 10 detik sampe tiket berhasil dicek
+        sleep(3); // ceritanya nunggu 3 detik sampe tiket berhasil dicek
         validateCheckOut(ticket, ticket_len);
         createCheckOutData(ticket);
     }
@@ -128,35 +128,33 @@ void inputTicket() {
         printf("|               Sedang memvalidasi tiket Anda...               |\n");
         printf("|                                                              |\n");
         printf("+==============================================================+\n\n");
-        sleep(10); // ceritanya nunggu 10 detik sampe tiket berhasil dicek
+        sleep(3); // ceritanya nunggu 3 detik sampe tiket berhasil dicek
         validateCheckIn(ticket, ticket_len);
         createCheckInData(ticket);
     }
 }
 
 void validateSelection(char *slc, char *page) {
-    size_t slc_len = strlen(slc);
+    int slc_len = strlen(slc);
     if (strcmp(page, pages[0]) == 0) {
-        last = 'r';
-        if (slc_len > 3 || (*slc < '1' || *slc > '9') || *(slc + 1) > '3')
-            strcpy(error, "|             Input yang Anda masukan tidak sesuai!            |\n|                     Silakan coba kembali.                    |\n");
+        slc_len--;
+        last = '9';
     }
-    if (strcmp(page, pages[1]) == 0) {
-        last = 'g';
-        if (slc_len > 2 || (*slc < '1' || *slc > '2'))
+    if (strcmp(page, pages[1]) == 0)
+        last = '2';
+
+    if ((slc_len > 2) || (*slc < '1' || *slc > last) || (*slc > '0' && *(slc + 1) > '3'))
             strcpy(error, "|             Input yang Anda masukan tidak sesuai!            |\n|                     Silakan coba kembali.                    |\n");
-    }
     if (*slc == '\n')
         strcpy(error, "|                   Input tidak boleh kosong!                  |\n|                     Silakan coba kembali.                    |\n");
 
     if (error[0])
-        errorMessage(error, last);
+        errorMessage(error, page);
 }
 
-void validateCheckIn(char *tic, size_t len) {
+void validateCheckIn(char *tic, int len) {
     char arr[5][MAXA];
-    char st[MAXA] = "";
-    char de[MAXA] = "";
+    char st[MAXA];
     int x = 0;
     for (i = 2; i < len - 1; i++)
         if (tic[i] == ' ') {
@@ -165,8 +163,8 @@ void validateCheckIn(char *tic, size_t len) {
         }
 
     if (len != 23 || x) {
-        strcpy(error, "|                   Kode tiket tidak sesuai!                   |\n|            Kode tiket tidak boleh mengandung spasi           |\n|                              dan                             |\n|     memiliki panjang kurang atau lebih dari 20 karakter.     |\n");
-        errorMessage(error, 't');
+        strcpy(error, "|                   Kode tiket tidak sesuai!                   |\n|       Kode hanya boleh berupa karakter angka atau huruf      |\n|                              dan                             |\n|                 memiliki panjang 20 karakter.                |\n");
+        errorMessage(error, "0");
     }
 
     FILE *rfptr;
@@ -175,23 +173,19 @@ void validateCheckIn(char *tic, size_t len) {
         fileError();
 
     j = x = 0;
-    while (fgets(temp_data, sizeof temp_data, rfptr) != NULL) { // cek file kosong atau tidak dan cek kode tiket
+    while (fgets(temp_data, sizeof temp_data, rfptr) != NULL) { // ambil semua data dari file
         tptr = strtok(temp_data, ",{}:\n\t");
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
             strcpy(arr[j], tptr);
-            if (x) {
-                error[0] = 0;
-                if (strcmp(tptr, " 'pending'") == 0)
-                    strcpy(error, "|                   Tiket sudah tervalidasi!                   |\n|       Segera gunakan tiket Anda dan lakukan konfirmasi       |\n|       di pintu keluar ketika sampai di stasiun tujuan.       |\n");
-                if (strcmp(tptr, " 'true'") == 0)
-                    strcpy(error, "|                    Tiket sudah digunakan!                    |\n|               Silakan untuk membeli tiket baru.              |\n");
+            if (x)
                 break;
-            }
             if (strcmp(tic, tptr) != 0)
                 strcpy(error, "|                    Tiket tidak ditemukan!                    |\n|               Silakan coba kembali lain waktu.               |\n");
-            else
+            else {
+                error[0] = 0;
                 x++;
+            }
 
             if (j == 4)
                 j = 0;
@@ -200,26 +194,21 @@ void validateCheckIn(char *tic, size_t len) {
         }
     }
     sprintf(st, " '%s'", stations[reader]);
-    if (strcmp(st, arr[1]) != 0 && j)
+    if (strcmp(arr[1], st) != 0 && x)
         strcpy(error, "|                  Stasiun awal tidak sesuai!                  |\n|          Silakan menuju stasiun awal yang Anda pilih         |\n|                     ketika membeli tiket.                    |\n");
-    else
-        for (i = 0; i < stations_len; i++) {
-            sprintf(de, " '%s'", stations[i]);
-            if (strcmp(arr[2], de) == 0) {
-                destination = i;
-                break;
-            }
-            de[0] = 0;
-        }
+    if (strcmp(arr[4], " 'pending'") == 0)
+        strcpy(error, "|                   Tiket sudah tervalidasi!                   |\n|       Segera gunakan tiket Anda dan lakukan konfirmasi       |\n|       di pintu keluar ketika sampai di stasiun tujuan.       |\n");
+    if (strcmp(arr[4], " 'true'") == 0)
+        strcpy(error, "|                    Tiket sudah digunakan!                    |\n|               Silakan untuk membeli tiket baru.              |\n");
 
     fclose(rfptr);
     if (error[0])
-        errorMessage(error, 't');
+        errorMessage(error, "0");
     temp_data[0] = 0;
 }
 
 void createCheckInData(char *tic) {
-    FILE *rfptr;
+    FILE *rfptr, *wfptr;
     rfptr = fopen("./data/ticket_data.txt", "r");
     if (rfptr == NULL)
         fileError();
@@ -230,35 +219,36 @@ void createCheckInData(char *tic) {
         tptr = strtok(temp_data, ",{}:\n\t");
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
-            if (x)
+            if (x) {
                 updateTicketData(ticket_data, tptr, " 'pending'");
+                x--;
+            }
             if (strcmp(tic, tptr) == 0)
                 x++;
         }
     }
-    fclose(rfptr);
 
-    FILE *wfptr;
     wfptr = fopen("./data/ticket_data.txt", "w");
     fprintf(wfptr, "%s", ticket_data);
+    fclose(rfptr);
     fclose(wfptr);
     strcpy(success, "|                   Validasi tiket berhasil!                   |\n|         Selamat menikmati perjalanan menggunakan MRT!        |\n");
     successMessage(success);
 }
 
-void validateCheckOut(char *tic, size_t len) {
+void validateCheckOut(char *tic, int len) {
     char arr[5][MAXA];
     int st, de;
     int x = 0;
     for (i = 2; i < len - 1; i++)
-        if (tic[i] == ' ') {
+        if (!isalnum(tic[i])) {
             x = 1;
             break;
         }
 
     if (len != 23 || x) {
-        strcpy(error, "|                   Kode tiket tidak sesuai!                   |\n|            Kode tiket tidak boleh mengandung spasi           |\n|                              dan                             |\n|     memiliki panjang kurang atau lebih dari 20 karakter.     |\n");
-        errorMessage(error, 't');
+        strcpy(error, "|                   Kode tiket tidak sesuai!                   |\n|       Kode hanya boleh berupa karakter angka atau huruf      |\n|                              dan                             |\n|                 memiliki panjang 20 karakter.                |\n");
+        errorMessage(error, "0");
     }
 
     FILE *rfptr;
@@ -267,23 +257,19 @@ void validateCheckOut(char *tic, size_t len) {
         fileError();
 
     j = x = 0;
-    while (fgets(temp_data, sizeof temp_data, rfptr) != NULL) { // cek file kosong atau tidak dan cek kode tiket
+    while (fgets(temp_data, sizeof temp_data, rfptr) != NULL) { // ambil semua data dari file
         tptr = strtok(temp_data, ",{}:\n\t");
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
             strcpy(arr[j], tptr);
-            if (x) {
-                error[0] = 0;
-                if (strcmp(tptr, " 'false'") == 0)
-                    strcpy(error, "|                   Tiket belum tervalidasi!                   |\n|        Segera gunakan tiket Anda dan lakukan validasi        |\n|                 di pintu masuk stasiun awal.                 |\n");
-                if (strcmp(tptr, " 'true'") == 0)
-                    strcpy(error, "|                  Tiket sudah terkonfirmasi!                  |\n");
+            if (x)
                 break;
-            }
             if (strcmp(tic, tptr) != 0)
                 strcpy(error, "|                    Tiket tidak ditemukan!                    |\n|               Silakan coba kembali lain waktu.               |\n");
-            else
+            else {
+                error[0] = 0;
                 x++;
+            }
 
             if (j == 4)
                 j = 0;
@@ -300,12 +286,17 @@ void validateCheckOut(char *tic, size_t len) {
         if (strcmp(temp_data, arr[2]) == 0)
             de = i;
     }
-    if (((st > de && (st < reader || de > reader)) || (st < de && (st > reader || de < reader))) && j)
-        strcpy(error, "|                     Akses keluar ditolak!                    |\n|            Anda hanya diperbolehkan keluar melalui           |\n|               pintu stasiun awal hingga tujuan.              |\n|               Tidak boleh mundur atau terlewat.              |\n");
+
+    if (((st > de && (st < reader || de > reader)) || (st < de && (st > reader || de < reader))) && x)
+        strcpy(error, "|                     Akses keluar ditolak!                    |\n|            Anda hanya diperbolehkan keluar melalui           |\n|               pintu stasiun awal hingga tujuan,              |\n|               tidak boleh mundur atau terlewat.              |\n");
+    if (strcmp(arr[4], " 'false'") == 0)
+        strcpy(error, "|                   Tiket belum tervalidasi!                   |\n|        Segera gunakan tiket Anda dan lakukan validasi        |\n|                 di pintu masuk stasiun awal.                 |\n");
+    if (strcmp(arr[4], " 'true'") == 0)
+            strcpy(error, "|                  Tiket sudah terkonfirmasi!                  |\n");
 
     fclose(rfptr);
     if (error[0])
-        errorMessage(error, 't');
+        errorMessage(error, "0");
     temp_data[0] = 0;
 }
 
@@ -321,8 +312,10 @@ void createCheckOutData(char *tic) {
         tptr = strtok(temp_data, ",{}:\n\t");
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
-            if (x)
+            if (x) {
                 updateTicketData(ticket_data, tptr, " 'true'");
+                x--;
+            }
             if (strcmp(tic, tptr) == 0)
                 x++;
         }
@@ -338,11 +331,11 @@ void createCheckOutData(char *tic) {
 }
 
 void updateTicketData(char *src, char *sub, char *str) {
-    size_t src_len = strlen(src);
     size_t sub_len = strlen(sub);
     size_t str_len = strlen(str);
 
-    char *sub_source = strstr(src, sub);
+    char *last_sub = strrchr(src, ':');
+    char *sub_source = strstr(last_sub, sub);
     size_t sub_source_len = strlen(sub_source);
     if (sub_source == NULL)
         return;
@@ -357,34 +350,33 @@ void updateTicketData(char *src, char *sub, char *str) {
 }
 
 void successMessage(char *suc) {
-    system("clear || cls"); // Menghapus screen
+    system("cls || clear"); // Menghapus screen
     printf("+==( PESAN SUKSES )============================================+\n");
     printf("|                                                              |\n");
     printf("%s", suc);
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
     suc[0] = 0;
-    temp_data[0] = 0;
 }
 
-void errorMessage(char *err, char last) {
-    system("clear || cls"); // Menghapus screen
+void errorMessage(char *err, char *page) {
+    system("cls || clear"); // Menghapus screen
     printf("+==( PESAN ERROR )=============================================+\n");
     printf("|                                                              |\n");
     printf("%s", err);
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
     err[0] = 0;
-    if (last == 't') // error saat kode tiket tidak sesuai
-        exit(1);
-    if (last == 'r') // error saat pilihan reader tidak sesuai
+    if (strcmp(page, pages[0]) == 0) // error saat pilihan reader tidak sesuai
         selectReader();
-    if (last == 'g') // error saat pilihan gates tidak sesuai
+    if (strcmp(page, pages[1]) == 0) // error saat pilihan gates tidak sesuai
         selectGate();
+    if (page[0] == '0') // error saat kode tiket tidak sesuai
+        exit(0);
 }
 
 void fileError() {
-    system("clear || cls"); // Menghapus screen
+    system("cls || clear"); // Menghapus screen
     printf("+==( PESAN ERROR )=============================================+\n");
     printf("|                                                              |\n");
     printf("|                        404 Not Found!                        |\n");
