@@ -718,6 +718,7 @@ void fileError() {
     printf("|        Tidak ada berkas atau direktori yang dimaksud.        |\n");
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
+    sleep(3); // nunggu 3 detik sebelum terminal tutup
     exit(0);
 }
 
@@ -727,6 +728,6 @@ void exitMessage() {
     printf("|            Terima kasih dan sampai jumpa kembali!            |\n");
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
-    sleep(3); // nunggu 3 detik biar pesannya kebaca sebelum terminal tutup
+    sleep(3); // nunggu 3 detik sebelum terminal tutup
     exit(0);
 }
