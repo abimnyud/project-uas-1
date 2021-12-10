@@ -178,13 +178,14 @@ void validateSelection(char *slc, char *cur) {
 }
 
 void exitMainGate(char *slc) {
-    system("cls || clear"); // Menghapus Screen
     switch (*slc)
     {
     case '1':
+        system("cls || clear"); // Menghapus Screen
         loginMenu();
         break;
     case '2':
+        system("cls || clear"); // Menghapus Screen
         registerMenu();
         break;
     default:
