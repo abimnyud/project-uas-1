@@ -112,7 +112,7 @@ void splashScreen() {
     printf("+==============================================================+\n");
     printf("|                                                              |\n");
     printf("|                        Sebelum lanjut,                       |\n");
-    printf("|   Silakan memilih menu login atau register terlebih dahulu.  |\n");
+    printf("|   silakan memilih menu login atau register terlebih dahulu.  |\n");
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
 }
