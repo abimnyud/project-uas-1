@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #ifdef _WIN32
 #include <Windows.h>
-#else
+#else   
 #include <unistd.h>
 #endif
 
@@ -110,7 +111,7 @@ void inputTicket() {
     ticket_code[strlen(ticket_code) - 1] = 0;    
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
-    sprintf(ticket, " '%s'", ticket_code);
+    sprintf(ticket, " '%s'", ticket_code); // format ticket
     ticket_len = strlen(ticket);
     if (gate) {
         printf("+==( LOADING )=================================================+\n");
@@ -208,14 +209,14 @@ void validateCheckIn(char *tic, int len) {
 }
 
 void createCheckInData(char *tic) {
-    FILE *rfptr, *wfptr;
-    rfptr = fopen("./data/ticket_data.txt", "r");
+    FILE *rfptr, *wfptr; // rfptr untuk membaca file, wfptr untuk menulis file
+    rfptr = fopen("./data/ticket_data.txt", "r"); // read data
     if (rfptr == NULL)
         fileError();
 
     int x = 0;
     while (fgets(temp_data, sizeof temp_data, rfptr) != NULL) {
-        strcat(ticket_data, temp_data);
+        strcat(ticket_data, temp_data); // menggabungkan atau menyatukan data
         tptr = strtok(temp_data, ",{}:\n\t");
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
@@ -223,12 +224,12 @@ void createCheckInData(char *tic) {
                 updateTicketData(ticket_data, tptr, " 'pending'");
                 x--;
             }
-            if (strcmp(tic, tptr) == 0)
+            if (strcmp(tic, tptr) == 0) // membandingkan kode tiket
                 x++;
         }
     }
 
-    wfptr = fopen("./data/ticket_data.txt", "w");
+    wfptr = fopen("./data/ticket_data.txt", "w"); // write data ke file
     fprintf(wfptr, "%s", ticket_data);
     fclose(rfptr);
     fclose(wfptr);
@@ -241,7 +242,7 @@ void validateCheckOut(char *tic, int len) {
     int st, de;
     int x = 0;
     for (i = 2; i < len - 1; i++)
-        if (!isalnum(tic[i])) {
+        if (!isalnum(tic[i])) { // cek apakah kode tiket merupakan karakter angka atau huruf
             x = 1;
             break;
         }
@@ -287,7 +288,7 @@ void validateCheckOut(char *tic, int len) {
             de = i;
     }
 
-    if (((st > de && (st < reader || de > reader)) || (st < de && (st > reader || de < reader))) && x)
+    if (((st > de && (st < reader || de > reader)) || (st < de && (st > reader || de < reader))) && x) // Cek apakah stasiun sesuai dengan stasiun yang ada di tiket
         strcpy(error, "|                     Akses keluar ditolak!                    |\n|            Anda hanya diperbolehkan keluar melalui           |\n|               pintu stasiun awal hingga tujuan,              |\n|               tidak boleh mundur atau terlewat.              |\n");
     if (strcmp(arr[4], " 'false'") == 0)
         strcpy(error, "|                   Tiket belum tervalidasi!                   |\n|        Segera gunakan tiket Anda dan lakukan validasi        |\n|                 di pintu masuk stasiun awal.                 |\n");
@@ -302,7 +303,7 @@ void validateCheckOut(char *tic, int len) {
 
 void createCheckOutData(char *tic) {
     FILE *rfptr;
-    rfptr = fopen("./data/ticket_data.txt", "r");
+    rfptr = fopen("./data/ticket_data.txt", "r"); // read data
     if (rfptr == NULL)
         fileError();
 
@@ -323,20 +324,20 @@ void createCheckOutData(char *tic) {
     fclose(rfptr);
 
     FILE *wfptr;
-    wfptr = fopen("./data/ticket_data.txt", "w");
+    wfptr = fopen("./data/ticket_data.txt", "w"); // write data ke file
     fprintf(wfptr, "%s", ticket_data);
     fclose(wfptr);
     strcpy(success, "|                  Konfirmasi tiket berhasil!                  |\n|                     Selamat beraktivitas!                    |\n");
     successMessage(success);
 }
 
-void updateTicketData(char *src, char *sub, char *str) {
+void updateTicketData(char *src, char *sub, char *str) { // src = ticket_data
     size_t sub_len = strlen(sub);
     size_t str_len = strlen(str);
 
-    char *last_sub = strrchr(src, ':');
-    char *sub_source = strstr(last_sub, sub);
-    size_t sub_source_len = strlen(sub_source);
+    char *last_sub = strrchr(src, ':'); // Cari tiket paling akhir
+    char *sub_source = strstr(last_sub, sub); // Ambil data status tiket
+    size_t sub_source_len = strlen(sub_source); // 
     if (sub_source == NULL)
         return;
 
@@ -344,9 +345,9 @@ void updateTicketData(char *src, char *sub, char *str) {
         sub_source + str_len,
         sub_source + sub_len,
         sub_source_len - sub_len + 1
-    );
+    ); // Memindahkan string ke string satunya
 
-    memcpy(sub_source, str, str_len);
+    memcpy(sub_source, str, str_len); // Update status ticket_data paling terakhir (memindahkan variabel str ke variabel status di ticket_data)
 }
 
 void successMessage(char *suc) {

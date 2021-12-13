@@ -1,13 +1,14 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
-#include <ctype.h>
+#include <stdio.h> // Fungsi dasar
+#include <stdlib.h> // Standar library
+#include <time.h> // Untuk mengambil waktu
+#include <string.h> // Untuk memanipulasi string
+#include <ctype.h> // Library untuk mengolah karakter
 
+// Untuk cross-platformm compile
 #ifdef _WIN32
-#include <Windows.h>
+#include <Windows.h> // Windows
 #else
-#include <unistd.h>
+#include <unistd.h> // Unix 
 #endif
 
 #define MAXB 1024
@@ -17,15 +18,15 @@
 #define MAXM 512
 #define MAXT 21
 
-// Pernyataan Kondisi (Wajib) **
-// Pernyataan Looping (Wajib) **
-// Fungsi (Wajib) **
-// Array 1D (Optional) **
-// Array 2D (Optional) *
-// Pointer (Optional) **
-// Karakter & String (Optional) **
-// Struct (optional) **
-// I/O **
+// Pernyataan Kondisi (Wajib) ** switch case dan if else
+// Pernyataan Looping (Wajib) ** for while do while
+// Fungsi (Wajib) ** 23 fungsi + 1 fungsi main
+// Array 1D (Optional) ** banyak
+// Array 2D (Optional) * stations
+// Pointer (Optional) ** banyak
+// Karakter & String (Optional) ** banyak
+// Struct (optional) ** Variabel data tiket
+// I/O ** user_data dan ticket_data
 
 char pages[][20] = {
     "Main Gate",
@@ -125,11 +126,11 @@ void mainGate() {
     printf("|    0. Keluar                                                 |\n");
     printf("|                                                              |\n");
     printf("+--- Pilih Menu : ");
-    fgets(selection, sizeof selection, stdin);
+    fgets(selection, sizeof selection, stdin); // Menerima input dari user
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
-    validateSelection(selection, pages[0]);
-    exitMainGate(selection);
+    validateSelection(selection, pages[0]); // Validasi inputan user
+    exitMainGate(selection); // Pindah ke halaman berikutnya
 }
 
 void validateSelection(char *slc, char *cur) {
@@ -210,8 +211,9 @@ void registerMenu() {
     fgets(confirm_password, sizeof confirm_password, stdin);
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
+    // Menghilangkan enter
     name[strlen(name) - 1] = username[strlen(username) - 1] = password[strlen(password) - 1] = confirm_password[strlen(confirm_password) - 1] = 0;
-    sprintf(u, " '%s'", username);
+    sprintf(u, " '%s'", username); // Menambahkan tanda petik satu menyimpan di variabel u
     registerAttempt(name, u, password, confirm_password);
     createUserData(name, username, password);
     loginMenu();
