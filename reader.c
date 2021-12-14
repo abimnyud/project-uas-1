@@ -5,8 +5,8 @@
 
 #ifdef _WIN32
 #include <Windows.h>
-#else   
-#include <unistd.h>
+#else
+#include <unistd.h> 
 #endif
 
 #define MAXA 64
@@ -28,7 +28,7 @@ char stations[][20] = {
     "Benhil",
     "Setiabudi",
     "Dukuh Atas",
-    "Bundaran HI" 
+    "Bundaran HI"
 };
 int stations_len = sizeof(stations) / sizeof(stations[0]);
 
@@ -43,15 +43,28 @@ char pages[][20] = {
     "Pintu Stasiun",
 };
 
-char last; char *tptr; char temp_data[MAXF]; char ticket_data[MAXF] = "";
-char ticket[MAXA]; char error[MAXM]; char success[MAXM]; char selection[MAXB];
+char last;
+char *tptr;
+char temp_data[MAXF];
+char ticket_data[MAXF] = "";
+char ticket[MAXA];
+char error[MAXM];
+char success[MAXM];
+char selection[MAXB];
 int reader, destination, gate, i, j;
 
-void inputTicket(); void validateCheckIn(char *tic, int len); void createCheckInData(char *tic);
-void validateCheckOut(char *tic, int len); void createCheckOutData(char *tic);
+void inputTicket();
+void validateCheckIn(char *tic, int len);
+void createCheckInData(char *tic);
+void validateCheckOut(char *tic, int len);
+void createCheckOutData(char *tic);
 void updateTicketData(char *src, char *sub, char *str);
-void validateSelection(char *slc, char *page); void selectReader(); void selectGate();
-void successMessage(char *suc); void errorMessage(char *err, char *page); void fileError();
+void validateSelection(char *slc, char *page);
+void selectReader();
+void selectGate();
+void successMessage(char *suc);
+void errorMessage(char *err, char *page);
+void fileError();
 
 int main() {
     system("cls || clear"); // Menghapus screen
@@ -82,7 +95,7 @@ void selectReader() {
     reader = atoi(selection) - 1;
 }
 
-void selectGate() { 
+void selectGate() {
     printf("+======================[[ PINTU STASIUN ]]=====================+\n");
     printf("|                                                              |\n");
     printf("|                     Daftar Pintu Stasiun                     |\n");
@@ -108,7 +121,7 @@ void inputTicket() {
     printf("|                                                              |\n");
     printf("+--- Silakan masukan kode tiket Anda : ");
     fgets(ticket_code, sizeof ticket_code, stdin);
-    ticket_code[strlen(ticket_code) - 1] = 0;    
+    ticket_code[strlen(ticket_code) - 1] = 0;
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
     sprintf(ticket, " '%s'", ticket_code); // format ticket
@@ -122,7 +135,7 @@ void inputTicket() {
         sleep(3); // ceritanya nunggu 3 detik sampe tiket berhasil dicek
         validateCheckOut(ticket, ticket_len);
         createCheckOutData(ticket);
-    }
+    } 
     else {
         printf("+==( LOADING )=================================================+\n");
         printf("|                                                              |\n");
@@ -145,7 +158,7 @@ void validateSelection(char *slc, char *page) {
         last = '2';
 
     if ((slc_len > 2) || (*slc < '1' || *slc > last) || (*slc > '0' && *(slc + 1) > '3'))
-            strcpy(error, "|             Input yang Anda masukan tidak sesuai!            |\n|                     Silakan coba kembali.                    |\n");
+        strcpy(error, "|             Input yang Anda masukan tidak sesuai!            |\n|                     Silakan coba kembali.                    |\n");
     if (*slc == '\n')
         strcpy(error, "|                   Input tidak boleh kosong!                  |\n|                     Silakan coba kembali.                    |\n");
 
@@ -293,7 +306,7 @@ void validateCheckOut(char *tic, int len) {
     if (strcmp(arr[4], " 'false'") == 0)
         strcpy(error, "|                   Tiket belum tervalidasi!                   |\n|        Segera gunakan tiket Anda dan lakukan validasi        |\n|                 di pintu masuk stasiun awal.                 |\n");
     if (strcmp(arr[4], " 'true'") == 0)
-            strcpy(error, "|                  Tiket sudah terkonfirmasi!                  |\n");
+        strcpy(error, "|                  Tiket sudah terkonfirmasi!                  |\n");
 
     fclose(rfptr);
     if (error[0])
@@ -309,15 +322,15 @@ void createCheckOutData(char *tic) {
 
     int x = 0;
     while (fgets(temp_data, sizeof temp_data, rfptr) != NULL) {
-        strcat(ticket_data, temp_data); // menggabungkan dua string
-        tptr = strtok(temp_data, ",{}:\n\t");  //misahin string dari karakter
+        strcat(ticket_data, temp_data);       // menggabungkan dua string
+        tptr = strtok(temp_data, ",{}:\n\t"); // misahin string dari karakter
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
             if (x) {
                 updateTicketData(ticket_data, tptr, " 'true'"); // update data tiket
                 x--;
             }
-            if (strcmp(tic, tptr) == 0)  // membandingkan kode tiket
+            if (strcmp(tic, tptr) == 0) // membandingkan kode tiket
                 x++;
         }
     }
@@ -331,13 +344,13 @@ void createCheckOutData(char *tic) {
     successMessage(success);
 }
 
-void updateTicketData(char *src, char *sub, char *str) { // src = ticket_data
+void updateTicketData(char *src, char *sub, char *str) {
     size_t sub_len = strlen(sub);
     size_t str_len = strlen(str);
 
-    char *last_sub = strrchr(src, ':'); // Cari tiket paling akhir
-    char *sub_source = strstr(last_sub, sub); // Ambil data status tiket
-    size_t sub_source_len = strlen(sub_source); // 
+    char *last_sub = strrchr(src, ':');       // Cari status tiket paling akhir
+    char *sub_source = strstr(last_sub, sub); // Ambil data status tiket, cari yang sama pertama kali
+    size_t sub_source_len = strlen(sub_source);
     if (sub_source == NULL)
         return;
 
@@ -372,7 +385,7 @@ void errorMessage(char *err, char *page) {
         selectReader();
     if (strcmp(page, pages[1]) == 0) // error saat pilihan gates tidak sesuai
         selectGate();
-    if (page[0] == '0') { // error saat kode tiket tidak sesuai
+    if (page[0] == '0') {             // error saat kode tiket tidak sesuai
         sleep(3); // nunggu 3 detik sebelum terminal tutup
         exit(0);
     }
