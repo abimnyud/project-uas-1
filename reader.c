@@ -136,7 +136,7 @@ void inputTicket() {
 }
 
 void validateSelection(char *slc, char *page) {
-    int slc_len = strlen(slc);
+    int slc_len = strlen(slc); // banyaknya character selection
     if (strcmp(page, pages[0]) == 0) {
         slc_len--;
         last = '9';
@@ -217,7 +217,7 @@ void createCheckInData(char *tic) {
     int x = 0;
     while (fgets(temp_data, sizeof temp_data, rfptr) != NULL) {
         strcat(ticket_data, temp_data); // menggabungkan atau menyatukan data
-        tptr = strtok(temp_data, ",{}:\n\t");
+        tptr = strtok(temp_data, ",{}:\n\t"); // pointer yang dipake berulang buat string
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
             if (x) {
@@ -309,15 +309,15 @@ void createCheckOutData(char *tic) {
 
     int x = 0;
     while (fgets(temp_data, sizeof temp_data, rfptr) != NULL) {
-        strcat(ticket_data, temp_data);
-        tptr = strtok(temp_data, ",{}:\n\t");
+        strcat(ticket_data, temp_data); // menggabungkan dua string
+        tptr = strtok(temp_data, ",{}:\n\t");  //misahin string dari karakter
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
             if (x) {
-                updateTicketData(ticket_data, tptr, " 'true'");
+                updateTicketData(ticket_data, tptr, " 'true'"); // update data tiket
                 x--;
             }
-            if (strcmp(tic, tptr) == 0)
+            if (strcmp(tic, tptr) == 0)  // membandingkan kode tiket
                 x++;
         }
     }

@@ -51,6 +51,11 @@ char stations[][20] = {
 };
 int stations_len = sizeof(stations) / sizeof(stations[0]);
 
+// Untuk enkripsi
+const char alphabet[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+size_t alphabet_len = sizeof(alphabet) / sizeof(char);
+int CIPHER_TOKEN = 20; // Token untuk enkripsi (PRIVATE)
+
 int i, j;
 char user_id[MAXI];
 char buff_id[MAXI];
@@ -77,6 +82,7 @@ void mainMenu(char *user);
 void subMenu(char *slc);
 void ticketMenu();
 void generateTicket(char *code);
+char *cipherEncryption(char *str);
 void createTicketData(char *str, char *des, char *code);
 void history();
 void schedule();
@@ -215,6 +221,7 @@ void registerMenu() {
     name[strlen(name) - 1] = username[strlen(username) - 1] = password[strlen(password) - 1] = confirm_password[strlen(confirm_password) - 1] = 0;
     sprintf(u, " '%s'", username); // Menambahkan tanda petik satu menyimpan di variabel u
     registerAttempt(name, u, password, confirm_password);
+    cipherEncryption(password);
     createUserData(name, username, password);
     loginMenu();
 }
@@ -270,6 +277,28 @@ void registerAttempt(char *name, char *u, char *pass, char *conf) {
         errorMessage(error, pages[0]);
 }
 
+char *cipherEncryption(char *str) {
+    int i = 0;
+    size_t j;
+
+    while(*(str + i)) {
+        if (!isalpha(*(str + i))) {
+            i++;
+            continue;
+        }
+        *(str + i) = tolower(*(str + i));
+        for(j = 0; j < alphabet_len; j++) {
+            if(*(str + i) == *(alphabet + j)) {
+                *(str + i) = *(alphabet + (j + CIPHER_TOKEN) % alphabet_len);
+                break;
+            }
+        }
+        i++;
+    }
+
+    return str;
+}
+
 void createUserData(char *name, char *u, char *pass) {
     FILE *rfptr, *wfptr;
     rfptr = fopen("./data/user_data.txt", "r");
@@ -320,6 +349,7 @@ void loginMenu() {
     printf("|                                                              |\n");
     printf("+==============================================================+\n\n");
     username[strlen(username) - 1] = password[strlen(password) - 1] = 0;
+    cipherEncryption(password);
     sprintf(u, " '%s'", username);
     sprintf(p, " '%s'", password);
     loginAttempt(&rfptr, u, p);
@@ -332,18 +362,17 @@ void loginAttempt(FILE **rfptr, char *u, char *p) {
         tptr = strtok(temp_data, ",{}:\n\t");
         if (tptr != NULL) {
             tptr = strtok(NULL, ",{}:\n\t");
-            if (i % 2 == 0 && (i - 2) % 6 == 0)
+            if (i % 4 == 0)
                 strcpy(user_id, tptr);
-            if (i % 3 == 0)
+            if (i % 4 == 1)
                 strcpy(user, tptr);
-            if (strcmp(u, tptr) == 0) {
+            if ((i - 2) % 4 == 0 && strcmp(u, tptr) == 0)
                 j = i + 1;
-                *u = 0;
-            }
             if (i == j && strcmp(p, tptr) == 0)
-                key = 1;
+                key++;
+
+            i++;
         }
-        i++;
         if (key)
             break;
     }
@@ -352,7 +381,6 @@ void loginAttempt(FILE **rfptr, char *u, char *p) {
     user[1] = ' ';
     user[strlen(user) - 1] = '!';
     fclose(*rfptr);
-
     if (key) {
         strcpy(success, "|                        Login berhasil!                       |\n");
         successMessage(success);
@@ -362,7 +390,6 @@ void loginAttempt(FILE **rfptr, char *u, char *p) {
             strcpy(error, "|                   Input tidak boleh kosong!                  |\n|            Mohon untuk mengisi input dengan benar!           |\n");
         else
             strcpy(error, "|            Kombinasi username dan password salah!            |\n|              Silakan periksa kembali akun Anda               |\n|                             atau                             |\n|             daftar akun baru pada menu register.             |\n");
-
         errorMessage(error, pages[0]);
     }
 }
@@ -692,7 +719,7 @@ void successMessage(char *suc) {
 }
 
 void errorMessage(char *err, char *cur) {
-    system("cls || clear"); // Menghapus Screen
+    // system("cls || clear"); // Menghapus Screen
     printf("+==( PESAN ERROR )=============================================+\n");
     printf("|                                                              |\n");
     printf("%s", err);
